@@ -95,6 +95,8 @@
 
 -(void)newCurrentPath:(CGPoint) point{
     self.currentNotePath = [[NotePath alloc] init];
+    self.currentNotePath.lineWidth = self.currentLineWidth;
+    self.currentNotePath.lineColor = self.currentLineColor;
     self.currentPathStrokes = [[NSMutableArray alloc] init];
     [self.currentPathStrokes addObject:[NSValue valueWithCGPoint:point]];
 }

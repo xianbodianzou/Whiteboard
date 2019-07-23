@@ -28,13 +28,7 @@
 
 -(instancetype)initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
-        self.operHis = [[NSMutableArray alloc] init];
-        self.operUndo = [[NSMutableArray alloc] init];
-        self.dicPaths = [[NSMutableDictionary alloc] init];
-        self.addIds = [[NSMutableArray alloc] init];
-        self.eraseIds = [[NSMutableArray alloc] init];
-        self.currentLineWidth = 1.0;
-        self.currentLineColor = [UIColor blackColor];
+        
         [self customInit];
     }
     return self;
@@ -74,14 +68,25 @@
 }
 
 #pragma mark =================私有方法================
+//初始化设置
 -(void)customInit{
-    self.mode = WhiteboardMode_draw;
+   
     self.wcv = [[WhiteboardCurrentView alloc] init];
     self.wcv.delegate = self;
     self.wcv.backgroundColor = [UIColor clearColor];
-    self.wcv.mode = WhiteboardMode_draw;
-    self.backgroundColor = [UIColor clearColor];
     [self addSubview:self.wcv];
+    
+    self.backgroundColor = [UIColor clearColor];
+   
+    self.operHis = [[NSMutableArray alloc] init];
+    self.operUndo = [[NSMutableArray alloc] init];
+    self.dicPaths = [[NSMutableDictionary alloc] init];
+    self.addIds = [[NSMutableArray alloc] init];
+    self.eraseIds = [[NSMutableArray alloc] init];
+    
+    self.currentMode = WhiteboardMode_draw;
+    self.currentLineWidth = 1.0;
+    self.currentLineColor = [UIColor blackColor];
 }
 
 -(void)layoutSubviews{
@@ -140,8 +145,22 @@
     }
 }
 
+//宽度 颜色 随机测试代码
+-(void)randomTest{
+    //测试代码
+    NSUInteger r1 = arc4random_uniform(10) + 1;
+    NSUInteger r2 = arc4random_uniform(255);
+    NSUInteger r3 = arc4random_uniform(255);
+    NSUInteger r4 = arc4random_uniform(255);
+    
+    self.currentLineWidth = r1;
+    self.currentLineColor = [UIColor colorWithRed:r2/255.0 green:r3/255.0 blue:r4/255.0 alpha:1];
+}
+
 #pragma mark =================WhiteboardCurrentViewDelegate================
 -(void)compeleteFullPathStrokes:(NotePath *)path{
+    [self randomTest];
+    
     [self addNotepath:path];//加入笔画
     [self.operUndo removeAllObjects];//回撤笔画清除
     [self setNeedsDisplay];
@@ -179,10 +198,24 @@
     return _notePaths;
 }
 
--(void)setMode:(WhiteboardMode)mode{
-    _mode = mode;
+-(void)setCurrentMode:(WhiteboardMode)mode{
+    _currentMode = mode;
     if(self.wcv){
-        self.wcv.mode = mode;
+        self.wcv.mode = _currentMode;
+    }
+}
+
+-(void)setCurrentLineWidth:(float)currentLineWidth{
+    _currentLineWidth = currentLineWidth;
+    if(self.wcv){
+        self.wcv.currentLineWidth = _currentLineWidth;
+    }
+}
+
+-(void)setCurrentLineColor:(UIColor *)currentLineColor{
+    _currentLineColor = currentLineColor;
+    if(self.wcv){
+        self.wcv.currentLineColor = _currentLineColor;
     }
 }
 

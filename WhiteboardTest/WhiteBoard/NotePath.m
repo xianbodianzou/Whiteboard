@@ -53,6 +53,8 @@
 
 //UIBezierPath b贝塞尔曲线画法。
 - (void)drawBezierPathLine{
+    [[UIColor colorWithCGColor:self.lineColor.CGColor] set];
+//    [UIColor.redColor set];
     [self.myPath stroke];
 }
 
@@ -210,7 +212,8 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
         path.lineCapStyle = kCGLineCapRound; //线条拐角
         path.lineJoinStyle = kCGLineJoinRound; //终点处理
         path.lineWidth = self.lineWidth;
-        [self.lineColor set];
+ 
+        //颜色无法在这边设置
         
         for (int i =0; i<_paths.count; i++)  {
             CGPoint point = ((NSValue *)[_paths objectAtIndex:i]).CGPointValue;

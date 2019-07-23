@@ -11,8 +11,8 @@
 
 @interface WhiteboardView : UIView
 
-@property (nonatomic,assign) WhiteboardMode mode;
-
+//当前线模式
+@property (nonatomic,assign) WhiteboardMode currentMode;
 //当前线宽
 @property (nonatomic,assign) float currentLineWidth;
 //当前颜色

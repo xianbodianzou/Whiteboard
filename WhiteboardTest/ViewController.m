@@ -41,10 +41,10 @@
 }
 - (IBAction)modeChangeAction:(UISegmentedControl *)sender {
     if(sender.selectedSegmentIndex==0){
-        self.board.mode = WhiteboardMode_draw;
+        self.board.currentMode = WhiteboardMode_draw;
     }
     else{
-        self.board.mode = WhiteboardMode_erase;
+        self.board.currentMode = WhiteboardMode_erase;
     }
     
 }
