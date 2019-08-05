@@ -29,7 +29,6 @@
 
 - (void)drawRect:(CGRect)rect {
     //测试数据
-
     if(self.currentNotePath){
         [self.currentNotePath drawBezierPathLine];
     }
@@ -103,11 +102,12 @@
 
 -(void)updateCurrentPath:(CGPoint) point{
     [self.currentPathStrokes addObject:[NSValue valueWithCGPoint:point]];
-    [self.currentNotePath setPaths:[self.currentPathStrokes copy]];
+    [self.currentNotePath setPathPoints:[self.currentPathStrokes copy]];
 }
 
 -(void)callback_compeleteFullPathStrokes{
     if(self.delegate && [self.delegate respondsToSelector:@selector(compeleteFullPathStrokes:)]){
+        [self.currentNotePath setPathPoints:[self.currentPathStrokes copy]];
         [self.delegate compeleteFullPathStrokes:self.currentNotePath];
         self.currentNotePath = nil;
     }

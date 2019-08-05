@@ -10,6 +10,15 @@
 
 @interface NotePath()
 @property(nonatomic,strong) UIBezierPath *myPath;
+@property(nonatomic,strong) UIBezierPath *myPathLeft;
+@property(nonatomic,strong) UIBezierPath *myPathRight;
+@property(nonatomic,strong) UIBezierPath *myFillPath;
+
+@property(nonatomic,strong) NSArray *leftPathPoints;
+@property(nonatomic,strong) NSArray *rightPathPoints;
+@property(nonatomic,strong) NSArray *bifengPaths;//一块一块的画
+@property(nonatomic,strong) NSArray *tipPahts;//笔锋连线画法
+@property(nonatomic,strong) NSArray *tipFills;//笔锋画法fill
 @end
 
 @implementation NotePath
@@ -19,7 +28,7 @@
         self.lineId = [[NSUUID UUID] UUIDString];
         self.lineColor = [UIColor blackColor];
         self.lineWidth = 1.0;
-        self.lineType = NoteLineType_curve2;
+        self.lineType = NoteLineType_tip;
     }
     return self;
 }
@@ -54,8 +63,21 @@
 //UIBezierPath b贝塞尔曲线画法。
 - (void)drawBezierPathLine{
     [[UIColor colorWithCGColor:self.lineColor.CGColor] set];
-//    [UIColor.redColor set];
-    [self.myPath stroke];
+    if(self.lineType ==NoteLineType_tip){
+        for (NSArray *pathArr in self.tipPahts) {
+            for (UIBezierPath *path in pathArr) {
+                [path stroke];
+            }
+        }
+        for (NSArray *pathArr in self.tipFills) {
+            for (UIBezierPath *path in pathArr) {
+                [path fill];
+            }
+        }
+    }
+    else{
+        [self.myPath stroke];
+    }
 }
 
 -(BOOL)containPoint:(CGPoint)point{
@@ -63,20 +85,20 @@
 }
 
 //贝塞尔顺滑曲线
--(void)moveToNextSmooth:(UIBezierPath *)path index:(int) i{
+-(void)moveToNextSmooth:(UIBezierPath *)path pathPoints:(NSArray *)pathPoints index:(int) i{
     int i1 = i-2;
     int i2 = i-1;
     int i3 = i;
     int i4 = i+1;
     //检查点
-    if(!(i2>=0&&i3<=self.paths.count)){
+    if(!(i2>=0&&i3<=self.pathPoints.count)){
         return;
     }
     
-    NSValue *v1 = i1>=0? [self.paths objectAtIndex:i1]:nil;
-    NSValue *v2 = [self.paths objectAtIndex:i2];
-    NSValue *v3 = [self.paths objectAtIndex:i3];
-    NSValue *v4 = i4<self.paths.count?[self.paths objectAtIndex:i4]:nil;
+    NSValue *v1 = i1>=0? [pathPoints objectAtIndex:i1]:nil;
+    NSValue *v2 = [pathPoints objectAtIndex:i2];
+    NSValue *v3 = [pathPoints objectAtIndex:i3];
+    NSValue *v4 = i4<pathPoints.count?[pathPoints objectAtIndex:i4]:nil;
     
     NSValue *v2_2 =  [[self getContrlPointWhithP0:v1 p1:v2 p2:v3] lastObject];
     NSValue *v3_1 = [[self getContrlPointWhithP0:v2 p1:v3 p2:v4] firstObject];
@@ -85,26 +107,26 @@
 }
 
 //两点中点为目的点 上个点为控制点
--(void)moveToNextWhthMidePoint:(UIBezierPath *)path index:(int) i{
+-(void)moveToNextWhthMidePoint:(UIBezierPath *)path pathPoints:(NSArray *)pathPoints index:(int) i{
     int i1 = i-1;
     int i2 = i;
-    NSValue *v1 = [self.paths objectAtIndex:i1];
-    NSValue *v2 = [self.paths objectAtIndex:i2];
+    NSValue *v1 = [pathPoints objectAtIndex:i1];
+    NSValue *v2 = [pathPoints objectAtIndex:i2];
     
     CGPoint pmid =  midpoint(v1.CGPointValue, v2.CGPointValue);
     [path addQuadCurveToPoint:pmid controlPoint:v1.CGPointValue];
 }
 //两点中为控制点
--(void)moveToNextWhthLinePoint:(UIBezierPath *)path index:(int) i{
+-(void)moveToNextWhthLinePoint:(UIBezierPath *)path pathPoints:(NSArray *)pathPoints index:(int) i{
     int i1 = i-2;
     int i2 = i-1;
     int i3 = i;
     int i4 = i+1;
-    NSValue *v3 = [self.paths objectAtIndex:i3];
-    if(i1>=0&&i4<self.paths.count){
-        NSValue *v1 = [self.paths objectAtIndex:i1];
-        NSValue *v2 = [self.paths objectAtIndex:i2];
-        NSValue *v4 = [self.paths objectAtIndex:i4];
+    NSValue *v3 = [pathPoints objectAtIndex:i3];
+    if(i1>=0&&i4<self.pathPoints.count){
+        NSValue *v1 = [pathPoints objectAtIndex:i1];
+        NSValue *v2 = [pathPoints objectAtIndex:i2];
+        NSValue *v4 = [pathPoints objectAtIndex:i4];
         
         NSValue *iv =  [self intersectionWithPoint1:v1 point2:v2 point3:v3 point4:v4];
         if(iv){
@@ -201,51 +223,448 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
     
     return [NSValue valueWithCGPoint:CGPointMake(ix, iy)];
 }
+//笔锋3
+//-(void)bifeng3:(NSArray *)paths{
+//    if(paths&&paths.count>1){
+//        for (int i =0; i<paths.count-1; i++) {
+//            float r1 = 3;
+//            float r2 = 3;
+//            CGPoint p1 = ((NSValue *)paths[i]).CGPointValue;
+//            CGPoint p2 = ((NSValue *)paths[i+1]).CGPointValue;
+////            self addQuadCurve:<#(CGPoint)#> ToPoint:<#(CGPoint)#> cp:<#(CGPoint)#> r1c:<#(float)#> rc2:<#(float)#>
+//        }
+//    }
+//}
+
+//笔锋画法2
+-(void)bifeng2:(NSArray *)paths{
+    if(paths&&paths.count>1){
+        NSMutableArray *lines = [[NSMutableArray alloc] init];
+        for (int i =0; i<self.pathPoints.count-1; i++) {
+            float r1 = 3;
+            float r2 = 3;
+            CGPoint p1 = ((NSValue *)[paths objectAtIndex:i]).CGPointValue;
+            CGPoint p2 = ((NSValue *)[paths objectAtIndex:i+1]).CGPointValue;
+            ZZLineRpoint *lineRP = [self getVectorFangentR1:r1 r2:r2 p1:p1 p2:p2];
+            [lines addObject:lineRP];
+        }
+        
+        if(lines.count>1){
+            NSMutableArray *paths = [[NSMutableArray alloc] init];
+            for (int i =0; i<lines.count; i++) {
+                ZZLineRpoint *l1 = [lines objectAtIndex:i];
+                if(i==0){
+                    //在点处画圆
+                    UIBezierPath *path=[UIBezierPath bezierPathWithOvalInRect:CGRectMake(l1.p1.x-l1.r1, l1.p1.y-l1.r1, l1.r1*2, l1.r1*2)];
+                    [paths addObject:path];
+                }
+                
+                //在点处画圆
+                UIBezierPath *path=[UIBezierPath bezierPathWithOvalInRect:CGRectMake(l1.p2.x-l1.r2, l1.p2.y-l1.r2, l1.r2*2, l1.r2*2)];
+                [paths addObject:path];
+                
+                //画梯形
+                UIBezierPath *pathT = [[UIBezierPath alloc] init];
+                [pathT moveToPoint:l1.lsP];
+                [pathT addLineToPoint:l1.leP];
+                [pathT addLineToPoint:l1.reP];
+                [pathT addLineToPoint:l1.rsP];
+                [pathT closePath];
+                [paths addObject:pathT];
+            }
+            self.bifengPaths = [paths copy];
+        }
+    }
+}
+
+//笔锋画法
+-(void)bifeng:(NSArray *)paths{
+    if(paths&&paths.count>1){
+        NSMutableArray *lines = [[NSMutableArray alloc] init];
+        for (int i =0; i<self.pathPoints.count-1; i++) {
+            float r1 = 3;
+            float r2 = 3;
+            CGPoint p1 = ((NSValue *)[paths objectAtIndex:i]).CGPointValue;
+            CGPoint p2 = ((NSValue *)[paths objectAtIndex:i+1]).CGPointValue;
+            ZZLineRpoint *lineRP = [self getVectorFangentR1:r1 r2:r2 p1:p1 p2:p2];
+            
+            [lines addObject:lineRP];
+        }
+        NSMutableArray *p1Points = [[NSMutableArray alloc] init];
+        NSMutableArray *p2Points = [[NSMutableArray alloc] init];
+        
+        if(lines.count>1){
+            BOOL lastIsLeft = YES;
+            for (int i =0; i<lines.count-1; i++) {
+                ZZLineRpoint *l1 = [lines objectAtIndex:i];
+                ZZLineRpoint *l2 = [lines objectAtIndex:i+1];
+                //判断 线是左转 还是右转
+                float corner = l2.vector - l1.vector;
+                if(corner>180){
+                    corner = 360 - corner;
+                }
+                else if(corner<-180){
+                    corner = 360 +corner;
+                }
+                
+                BOOL isLeft = corner<=0;
+                bool isRealLeft = corner<=0;
+                if(i==0){
+                    if(fabsf(corner)<45){
+                        isLeft = YES;
+                    }
+                }
+                else{
+                    if(fabsf(corner)<45){
+                        //方向小不改变方向
+                        isLeft = lastIsLeft;
+                    }
+                    else{
+                        isLeft = corner<=0;
+                    }
+                }
+                
+//                isLeft = corner<=0;
+               
+                NSLog(@"向量角度：%@",isLeft?@"左":@"右");
+                
+                if(i==0){
+                    //起始点
+                    if(isLeft){
+                        [p1Points addObject:[NSValue valueWithCGPoint:l1.lsP]];
+                        [p2Points addObject:[NSValue valueWithCGPoint:l1.p1]];
+                    }
+                    else{
+                        [p1Points addObject:[NSValue valueWithCGPoint:l1.p1]];
+                        [p2Points addObject:[NSValue valueWithCGPoint:l1.rsP]];
+                    }
+                }
+                
+                if(isLeft){
+                    [p1Points addObject:[NSValue valueWithCGPoint:l1.leP]];
+                    if(isRealLeft) [p1Points addObject:[NSValue valueWithCGPoint:l2.lsP]];
+                    [p2Points addObject:[NSValue valueWithCGPoint:l1.p2]];
+                }
+                else{
+                    [p1Points addObject:[NSValue valueWithCGPoint:l1.p2]];
+                    [p2Points addObject:[NSValue valueWithCGPoint:l1.reP]];
+                    if(!isRealLeft) [p2Points addObject:[NSValue valueWithCGPoint:l2.rsP]];
+                }
+                
+                if(i+1==lines.count-1){
+                    //结束点
+                    [p1Points addObject:[NSValue valueWithCGPoint:l2.p2]];
+                    [p2Points addObject:[NSValue valueWithCGPoint:l2.p2]];
+                }
+                
+                lastIsLeft = isLeft;
+            }
+        }
+        
+        self.leftPathPoints = p1Points;
+        self.rightPathPoints = p2Points;
+        
+        NSLog(@"pathPoints:%@",self.pathPoints);
+        NSLog(@"leftPathPoints:%@",self.leftPathPoints);
+        NSLog(@"rightPathPoints:%@",self.rightPathPoints);
+    }
+    else{
+        self.leftPathPoints = @[];
+        self.rightPathPoints = @[];
+    }
+}
 
 #pragma mark =================setters================
--(void)setPaths:(NSArray *)paths{
-    _paths = paths;
+-(void)setPathPoints:(NSArray *)paths{
+    _pathPoints = paths;
+//    [self bifeng:paths];
+//    [self bifeng2:paths];
     
-    //直接计算出路径 避免重复计算
-    if(_paths && _paths.count>1){
+    self.myPath =  [self calcPath:_pathPoints];
+//    self.myPathLeft = [self calcPath:_leftPathPoints];
+//    self.myPathRight = [self calcPath:_rightPathPoints];
+//    self.myFillPath = [self callFillPath];
+}
+
+-(UIBezierPath *)callFillPath{
+    NSArray *lps = self.leftPathPoints;
+    NSArray *rps = [[[[NSMutableArray alloc] initWithArray:self.rightPathPoints] reverseObjectEnumerator] allObjects] ;
+    if(lps&&lps.count>1&&rps&&rps.count>1){
         UIBezierPath *path = [[UIBezierPath alloc] init];
-        path.lineCapStyle = kCGLineCapRound; //线条拐角
-        path.lineJoinStyle = kCGLineJoinRound; //终点处理
-        path.lineWidth = self.lineWidth;
- 
-        //颜色无法在这边设置
-        
-        for (int i =0; i<_paths.count; i++)  {
-            CGPoint point = ((NSValue *)[_paths objectAtIndex:i]).CGPointValue;
+        for (int i =0; i<lps.count; i++)  {
+            CGPoint point = ((NSValue *)[lps objectAtIndex:i]).CGPointValue;
             if(i==0){
                 [path moveToPoint: point];
             }
             else{
-                if(self.lineType ==NoteLineType_straight){
-                    //直接化直线
+                //两点中点为目的点 上个点为控制点
+                [self moveToNextWhthMidePoint:path pathPoints:lps index:i];
+                //中点添加直线到中点
+                if(i==lps.count-1){
                     [path addLineToPoint:point];
-                }
-                else if(self.lineType == NoteLineType_curve0){
-                    //两点中点为目的点 上个点为控制点
-                    [self moveToNextWhthMidePoint:path index:i];
-                }
-                else if(self.lineType == NoteLineType_curve1){
-                    //两条直线相交获取控制点
-                    [self moveToNextWhthLinePoint:path index:i];
-                }
-                else {
-                    //贝思尔顺滑曲线
-                    [self moveToNextSmooth:path index:i];
                 }
             }
         }
         
-        self.myPath = path;
+        for (int i = 0; i<rps.count; i++) {
+            CGPoint point = ((NSValue *)[rps objectAtIndex:i]).CGPointValue;
+            if(i==0){
+
+            }
+            else{
+                //两点中点为目的点 上个点为控制点
+                [self moveToNextWhthMidePoint:path pathPoints:rps index:i];
+                //中点添加直线到中点
+                if(i==rps.count-1){
+                    [path addLineToPoint:point];
+                }
+            }
+        }
+        
+        [path closePath];
+        
+        return  path;
+    }
+    
+    return nil;
+}
+
+
+-(UIBezierPath *)calcPath:(NSArray *)pathPoints{
+    //直接计算出路径 避免重复计算
+    if(pathPoints && pathPoints.count>1){
+        UIBezierPath *path = [[UIBezierPath alloc] init];
+        path.lineCapStyle = kCGLineCapRound; //线条拐角
+        path.lineJoinStyle = kCGLineJoinRound; //终点处理
+        path.lineWidth = self.lineWidth;
+        
+        //颜色无法在这边设置
+        if(self.lineType == NoteLineType_tip){
+            NSMutableArray * arr = [[NSMutableArray alloc] init];
+            NSMutableArray * arrf = [[NSMutableArray alloc] init];
+            if(pathPoints.count>2){
+                for (int i =0; i<pathPoints.count-2; i++){
+                    CGPoint pi1 = ((NSValue *)pathPoints[i]).CGPointValue;
+                    CGPoint pi2 = ((NSValue *)pathPoints[i+1]).CGPointValue;
+                    CGPoint pi3 = ((NSValue *)pathPoints[i+2]).CGPointValue;
+                    CGPoint p1 = midpoint(pi1, pi2);
+                    CGPoint p2 = midpoint(pi2, pi3);
+                    CGPoint cp = pi2;
+                    float r1c = 5;
+                    float rc2 = 5;
+                    
+                    [self addQuadCurve:p1 ToPoint:p2 cp:cp r1c:r1c rc2:rc2 outArr1:arr outArr2:arrf];
+                   
+                }
+            }
+            
+            self.tipPahts  = [arr copy];
+            self.tipFills = [arrf copy];
+        }
+        else{
+            for (int i =0; i<pathPoints.count; i++)  {
+                CGPoint point = ((NSValue *)[pathPoints objectAtIndex:i]).CGPointValue;
+                if(i==0){
+                    [path moveToPoint: point];
+                }
+                else{
+                    if(self.lineType ==NoteLineType_straight){
+                        //直接化直线
+                        [path addLineToPoint:point];
+                    }
+                    else if(self.lineType == NoteLineType_curve0){
+                        //两点中点为目的点 上个点为控制点
+                        [self moveToNextWhthMidePoint:path pathPoints:pathPoints index:i];
+                        //中点添加直线到中点
+                        if(i==pathPoints.count-1){
+                            [path addLineToPoint:point];
+                        }
+                    }
+                    else if(self.lineType == NoteLineType_curve1){
+                        //两条直线相交获取控制点
+                        [self moveToNextWhthLinePoint:path pathPoints:pathPoints index:i];
+                    }
+                    else {
+                        //贝思尔顺滑曲线
+                        [self moveToNextSmooth:path pathPoints:pathPoints index:i];
+                    }
+                }
+            }
+        }
+        return path;
     }
     else{
-        self.myPath = nil;
+        return nil;
     }
 }
+
+#pragma mark =================笔锋设计================
+//自定话的贝塞尔曲线
+-(void)addQuadCurve:(CGPoint )p1 ToPoint:(CGPoint)p2 cp:(CGPoint) cp r1c:(float)r1c rc2:(float)rc2 outArr1:(NSMutableArray *) outArr1 outArr2:(NSMutableArray *) outArr2{
+    float line1 = [self getDisP1:p1 p2:cp];
+    float line2 = [self getDisP1:cp p2:p2];
+    int dengfeng = ceil(MAX(line1, line2));
+    
+    NSLog(@"%@,%@",@(10/sqrt(sqrt(line1))),@(10/sqrt(sqrt(line2))));
+    r1c = 10/sqrt(sqrt(line1));
+    rc2 = 10/sqrt(sqrt(line2));
+    if(r1c>8) r1c = 8;
+    if(rc2>8) rc2 = 8;
+    
+    float v1c = [self comAngle:[self getvectorP1:p1 p2:cp]];
+    float vc2 = [self comAngle:[self getvectorP1:cp p2:p2]];
+    
+    
+    NSMutableArray *arr = [[NSMutableArray alloc] init];
+    
+    for (int i=0; i<dengfeng; i++) {
+        float dis1 = line1*i/dengfeng;
+        float dis2 = line2*i/dengfeng;
+        
+        CGPoint _p1 = [self getPoint:p1 vector:v1c r:dis1];
+        CGPoint _p2 = [self getPoint:cp vector:vc2 r:dis2];
+        
+        float _d = [self getDisP1:_p1 p2:_p2];
+        float _v = [self comAngle:[self getvectorP1:_p1 p2:_p2]];
+        float _dr = _d*i/dengfeng;
+        
+        CGPoint pd =  [self getPoint:_p1 vector:_v r:_dr];
+        
+        [arr addObject:[NSValue valueWithCGPoint:pd]];
+    }
+    
+    [arr addObject:[NSValue valueWithCGPoint:p2]];
+    NSMutableArray *patharr = [[NSMutableArray alloc] init];
+    for (int i =0; i<arr.count-1; i++) {
+        CGPoint p1 =  ((NSValue *)arr[i]).CGPointValue;
+        CGPoint p2 =  ((NSValue *)arr[i+1]).CGPointValue;
+        float w = r1c + i*(rc2-r1c)/dengfeng;
+        UIBezierPath *pitem = [[UIBezierPath alloc] init];
+        pitem.lineCapStyle =  kCGLineCapRound;
+        pitem.lineJoinStyle = kCGLineJoinRound;
+        pitem.lineWidth = w;
+        [pitem moveToPoint:p1];
+        [pitem addLineToPoint:p2];
+        [patharr addObject:pitem];
+    }
+    [outArr1 addObject:patharr];
+    
+//    NSMutableArray *pathfill = [[NSMutableArray alloc] init];
+//    for (int i = 0; i<arr.count; i++) {
+//        CGPoint p1 =  ((NSValue *)arr[i]).CGPointValue;
+//        float w = r1c + i*(rc2-r1c)/dengfeng;
+//        UIBezierPath *pfill = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(p1.x-w/2, p1.y-w/2, w, w)];
+//        [pathfill addObject:pfill];
+//    }
+//
+//
+//    [outArr2 addObject:pathfill];
+}
+
+
+
+//获取切线向量
+-(ZZLineRpoint *)getVectorFangentR1:(float) r1 r2:(float) r2 p1:(CGPoint)p1 p2:(CGPoint) p2{
+    float vector12 = [self comAngle:[self getvectorP1:p1 p2:p2]];
+    float dis12 =  [self getDisP1:p1 p2:p2];
+    float inAngle = [self getInAngle:fabsf(r2-r1)string:dis12];
+    //左边切线半径向量
+    float vector12_qLeft = [self getVFLeftR1:r1 r2:r2 vector12:vector12 inAngle:inAngle];
+    //右边切线半径向量
+    float vector12_qRight = [self getVFTRightR1:r1 r2:r2 vector12:vector12 inAngle:inAngle];
+    
+    CGPoint pls = [self getPoint:p1 vector:vector12_qLeft r:r1];
+    CGPoint ple =  [self getPoint:p2 vector:vector12_qLeft r:r2];
+    CGPoint prs =  [self getPoint:p1 vector:vector12_qRight r:r1];
+    CGPoint pre = [self getPoint:p2 vector:vector12_qRight r:r2];
+    
+    ZZLineRpoint *lineRPoint = [[ZZLineRpoint alloc] init];
+    lineRPoint.vector =vector12;
+    lineRPoint.p1 = p1;
+    lineRPoint.r1 = r1;
+    lineRPoint.p2 = p2;
+    lineRPoint.r2 = r2;
+    lineRPoint.lsP = pls;
+    lineRPoint.leP = ple;
+    lineRPoint.rsP = prs;
+    lineRPoint.reP = pre;
+    return lineRPoint;
+    
+}
+
+//根据起始点，向量，距离 取得 坐标
+-(CGPoint)getPoint:(CGPoint) p vector:(float)vector r:(float)r{
+    float x = r*cosf(DegreesToRadian(vector))+p.x;
+    float y = r*sinf(DegreesToRadian(vector))+p.y;
+    CGPoint pp = CGPointMake(x, y) ;
+//    NSLog(@"切点：%@",NSStringFromCGPoint(pp));
+    return pp;
+}
+
+//取得右手切线向量
+-(float)getVFTRightR1:(float) r1 r2:(float) r2 vector12:(float)vector12 inAngle:(float) inAngle{
+    //切线向量
+    float vector12_q;
+    if(r1<=r2){
+        vector12_q = vector12 + (90 - inAngle);
+    }
+    else{
+        vector12_q = vector12 - (90 -inAngle);
+    }
+//    NSLog(@"切线右手向量：%@",@(vector12_q));
+    float vector12_q_r = vector12_q + 90;
+//    NSLog(@"切线右手半径向量：%@",@(vector12_q_r));
+    return vector12_q_r;
+}
+
+
+//取得左手切线向量
+-(float)getVFLeftR1:(float) r1 r2:(float) r2 vector12:(float)vector12 inAngle:(float) inAngle{
+    //切线向量
+    float vector12_q;
+    if(r1>=r2){
+        vector12_q = vector12 + (90 - inAngle);
+    }
+    else{
+        vector12_q = vector12 - (90 -inAngle);
+    }
+//    NSLog(@"切线左手向量：%@",@(vector12_q));
+    float vector12_q_r = vector12_q - 90;
+//    NSLog(@"切线左手半径向量：%@",@(vector12_q_r));
+    return vector12_q_r;
+}
+
+//余弦值 求夹角
+-(float)getInAngle:(float)edge string:(float) string{
+    double angle  = acos(edge/string);
+    double degree = RadianToDegrees(angle);
+//    NSLog(@"夹角：%@",@(degree));
+    return degree;
+}
+
+//获取两点距离
+-(float)getDisP1:(CGPoint) p1 p2:(CGPoint) p2{
+    float dis = sqrt(pow((p2.y-p1.y), 2)+pow((p2.x-p1.x), 2));
+//    NSLog(@"距离：%@",@(dis));
+    return dis;
+}
+
+//获取两点向量
+-(CGPoint)getvectorP1:(CGPoint) p1 p2:(CGPoint) p2{
+    return CGPointMake(p2.x-p1.x,p2.y-p1.y);
+}
+
+//获取向量角度
+-(float)comAngle:(CGPoint )point{
+    double angle  = atan2(point.y, point.x);
+    double degree = RadianToDegrees(angle);
+    if(degree<0){
+        degree = 360+degree;
+    }
+//    NSLog(@"角度：%@",@(degree));
+    return degree;
+}
+
 
 @end
 
@@ -258,4 +677,9 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
     }
     return self;
 }
+@end
+
+
+#pragma mark =================线段属性================
+@implementation ZZLineRpoint
 @end

@@ -10,6 +10,8 @@
 #import "WhiteboardView.h"
 #import "WhiteboardCurrentView.h"
 #import "NotePath.h"
+#import "UIBezierPath+GetAllPoints.h"
+
 
 @interface ViewController ()
 @property(nonatomic,strong) WhiteboardView *board;
@@ -25,20 +27,21 @@
     [self.view sendSubviewToBack:wv];
     
     self.board = wv;
-//    NSValue *v1 =  [NSValue valueWithCGPoint: CGPointMake(1, 3)];
-//    NSValue *v2 =  [NSValue valueWithCGPoint: CGPointMake(2, 1)];
-//    NSValue *v3 =  [NSValue valueWithCGPoint: CGPointMake(3, 2)];
-//    NSValue *v4 =  [NSValue valueWithCGPoint: CGPointMake(5, 3)];
+    
+//    UIBezierPath *pathtest = [[UIBezierPath alloc] init];
+//    [pathtest moveToPoint:CGPointMake(0, 0)];
 //    
-//    NSValue *interp =   [self intersectionWithPoint1:v1 point2:v2 point3:v3 point4:v4];
+//    [pathtest addLineToPoint:CGPointMake(100, 100)];
 //    
-//    NSLog(@"相交点：%@",interp);
+//    NSArray *points = [pathtest points];
+//    
+//    NSLog(@"%@",points);
 }
 
 - (IBAction)presentClick:(id)sender {
     
-    
 }
+
 - (IBAction)modeChangeAction:(UISegmentedControl *)sender {
     if(sender.selectedSegmentIndex==0){
         self.board.currentMode = WhiteboardMode_draw;
@@ -54,6 +57,8 @@
 - (IBAction)forwardAction:(id)sender {
     [self.board forword];
 }
+
+
 
 -(NSValue *)intersectionWithPoint1:(NSValue *)point1 point2:(NSValue *)point2 point3:(NSValue *)point3 point4:(NSValue *)point4{
     CGPoint p1 = point1.CGPointValue;

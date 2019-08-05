@@ -16,6 +16,7 @@
 		CC6AE19622DDAFDB00E1FCBC /* WhiteboardCurrentView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6AE19522DDAFDB00E1FCBC /* WhiteboardCurrentView.m */; };
 		CC6AE19C22DDB04A00E1FCBC /* WhiteboardView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6AE19B22DDB04A00E1FCBC /* WhiteboardView.m */; };
 		CC6AE19F22DDB87600E1FCBC /* NotePath.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6AE19E22DDB87600E1FCBC /* NotePath.m */; };
+		CCE26FB022F2B75A0003B5F6 /* UIBezierPath+GetAllPoints.m in Sources */ = {isa = PBXBuildFile; fileRef = CCE26FAF22F2B75A0003B5F6 /* UIBezierPath+GetAllPoints.m */; };
 		EF8E00A848E3860A303A4EE0 /* libPods-WhiteboardTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4862E54FE8C70B38814220E3 /* libPods-WhiteboardTest.a */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,8 @@
 		CC6AE19D22DDB87600E1FCBC /* NotePath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotePath.h; sourceTree = "<group>"; };
 		CC6AE19E22DDB87600E1FCBC /* NotePath.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotePath.m; sourceTree = "<group>"; };
 		CCA199DE22E55BB100557CEC /* WhiteboardEnum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhiteboardEnum.h; sourceTree = "<group>"; };
+		CCE26FAE22F2B75A0003B5F6 /* UIBezierPath+GetAllPoints.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+GetAllPoints.h"; sourceTree = "<group>"; };
+		CCE26FAF22F2B75A0003B5F6 /* UIBezierPath+GetAllPoints.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+GetAllPoints.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +119,8 @@
 				CC6AE19522DDAFDB00E1FCBC /* WhiteboardCurrentView.m */,
 				CC6AE19D22DDB87600E1FCBC /* NotePath.h */,
 				CC6AE19E22DDB87600E1FCBC /* NotePath.m */,
+				CCE26FAE22F2B75A0003B5F6 /* UIBezierPath+GetAllPoints.h */,
+				CCE26FAF22F2B75A0003B5F6 /* UIBezierPath+GetAllPoints.m */,
 			);
 			path = WhiteBoard;
 			sourceTree = "<group>";
@@ -244,6 +249,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCE26FB022F2B75A0003B5F6 /* UIBezierPath+GetAllPoints.m in Sources */,
 				CC6AE19F22DDB87600E1FCBC /* NotePath.m in Sources */,
 				CC6AE17F22DD78A200E1FCBC /* ViewController.m in Sources */,
 				CC6AE18A22DD78A300E1FCBC /* main.m in Sources */,
