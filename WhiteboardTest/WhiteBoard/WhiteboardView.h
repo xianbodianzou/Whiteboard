@@ -17,6 +17,8 @@
 @property (nonatomic,assign) float currentLineWidth;
 //当前颜色
 @property (nonatomic,strong) UIColor *currentLineColor;
+//线类型
+@property (nonatomic,assign) NoteLineType currentLineType;
 
 //前进
 -(void)forword;

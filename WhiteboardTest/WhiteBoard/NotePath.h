@@ -24,6 +24,8 @@
 - (void)drawBezierPathLine;
 
 - (BOOL)containPoint:(CGPoint)point;
+
+- (void)setPathPoints:(NSArray *)paths compelete:(BOOL)compelete;
 @end
 
 #pragma mark =================操作================

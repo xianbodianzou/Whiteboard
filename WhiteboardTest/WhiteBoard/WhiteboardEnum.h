@@ -26,7 +26,7 @@ typedef enum : NSUInteger {
     NoteLineType_curve0,   //二次曲线 目标点为 中点，控制点为 前一点
     NoteLineType_curve1,   //二次曲线 目标点为 第二点  两条线交点
     NoteLineType_curve2,   //三次曲线 目标点为 第二点  两个控制点
-    NoteLineType_tip,   //笔锋画法画法
+    NoteLineType_tip,   //毛笔加笔锋画法画法
 } NoteLineType;
 
 typedef enum : NSUInteger {

@@ -184,6 +184,7 @@
     self.currentMode = WhiteboardMode_draw;
     self.currentLineWidth = 1.0;
     self.currentLineColor = [UIColor blackColor];
+    self.currentLineType = NoteLineType_tip;
 }
 
 //添加笔画
@@ -275,6 +276,22 @@
     
 }
 
+-(float)wc_getLineWidth{
+    return self.currentLineWidth;
+}
+
+-(UIColor *)wc_getLineColor{
+    return self.currentLineColor;
+}
+
+-(NoteLineType)wc_getLineType{
+    return self.currentLineType;
+}
+
+-(WhiteboardMode)wc_getMode{
+    return self.currentMode;
+}
+
 #pragma mark =================getters setters================
 -(NSMutableArray *)notePaths{
     if(!_notePaths){
@@ -285,23 +302,20 @@
 
 -(void)setCurrentMode:(WhiteboardMode)mode{
     _currentMode = mode;
-    if(self.wcv){
-        self.wcv.mode = _currentMode;
-    }
 }
 
 -(void)setCurrentLineWidth:(float)currentLineWidth{
     _currentLineWidth = currentLineWidth;
-    if(self.wcv){
-        self.wcv.currentLineWidth = _currentLineWidth;
-    }
+//    if(self.wcv){
+//        self.wcv.currentLineWidth = _currentLineWidth;
+//    }
 }
 
 -(void)setCurrentLineColor:(UIColor *)currentLineColor{
     _currentLineColor = currentLineColor;
-    if(self.wcv){
-        self.wcv.currentLineColor = _currentLineColor;
-    }
+//    if(self.wcv){
+//        self.wcv.currentLineColor = _currentLineColor;
+//    }
 }
 
 
