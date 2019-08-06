@@ -57,6 +57,20 @@
 - (IBAction)forwardAction:(id)sender {
     [self.board forword];
 }
+- (IBAction)modetypeAction:(UISegmentedControl *)sender {
+    if(sender.selectedSegmentIndex==0){
+        self.board.currentLineType = NoteLineType_straight;
+    }
+    else if(sender.selectedSegmentIndex ==1){
+        self.board.currentLineType = NoteLineType_curve0;
+    }
+    else if(sender.selectedSegmentIndex ==2){
+        self.board.currentLineType = NoteLineType_tip;
+    }
+    else if(sender.selectedSegmentIndex ==3){
+        self.board.currentLineType = NoteLineType_brush;
+    }
+}
 
 
 

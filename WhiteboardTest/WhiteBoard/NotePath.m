@@ -73,7 +73,7 @@
 //UIBezierPath b贝塞尔曲线画法。
 - (void)drawBezierPathLine{
     [[UIColor colorWithCGColor:self.lineColor.CGColor] set];
-    if(self.lineType ==NoteLineType_tip){
+    if(self.lineType ==NoteLineType_brush||self.lineType==NoteLineType_tip){
         for (UIBezierPath *p in self.tipAllPaths) {
             [p stroke];
         }
@@ -477,7 +477,7 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
         [tmp addObject:pathPoints.lastObject];
         
         //颜色无法在这边设置
-        if(self.lineType == NoteLineType_tip){
+        if(self.lineType == NoteLineType_brush||self.lineType ==NoteLineType_tip){
             [self.tipAllPaths removeAllObjects];
             if(pathPoints.count>2){
                 for (int i =0; i<pathPoints.count-2; i++){
@@ -492,7 +492,7 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
                 }
             }
             //起笔修正
-            [self corStartTip];
+            if(self.lineType == NoteLineType_brush) [self corStartTip];
             //笔尾修正
             if(self.isCompelete) [self corEndTip];
         }
@@ -625,6 +625,9 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
     if(r1c>8) r1c = 8;
     if(rc2>8) rc2 = 8;
     
+    if(self.lineType == NoteLineType_tip){
+        r1c = rc2 = self.lineWidth;
+    }
 //    NSLog(@"%@",@(r1c));
     
     float v1c = [self comAngle:[self getvectorP1:p1 p2:cp]];

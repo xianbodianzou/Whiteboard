@@ -182,9 +182,9 @@
     self.eraseIds = [[NSMutableArray alloc] init];
     
     self.currentMode = WhiteboardMode_draw;
-    self.currentLineWidth = 1.0;
+    self.currentLineWidth = 4.0;
     self.currentLineColor = [UIColor blackColor];
-    self.currentLineType = NoteLineType_tip;
+    self.currentLineType = NoteLineType_straight;
 }
 
 //添加笔画
