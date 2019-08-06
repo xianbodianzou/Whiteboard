@@ -444,7 +444,8 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
         
         CGPoint pf = ((NSValue *)pathPoints[0]).CGPointValue;
         self.erasePath = [[UIBezierPath alloc] init];
-        [self.erasePath moveToPoint:pf];
+//        [self.erasePath moveToPoint:pf];
+        [self.erasePath appendPath:[self getEraseCircle:pf]];
         
         //开始和结束补点。
         NSMutableArray *tmp = [[NSMutableArray alloc] initWithArray:pathPoints];
@@ -465,7 +466,8 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
             }
         }
         else if(pathPoints.count){
-            [self.erasePath addLineToPoint:((NSValue *)pathPoints.lastObject).CGPointValue];
+//            [self.erasePath addLineToPoint:((NSValue *)pathPoints.lastObject).CGPointValue];
+            [self.erasePath appendPath:[self getEraseCircle:((NSValue *)pathPoints.lastObject).CGPointValue]];
         }
     }
     
@@ -549,6 +551,12 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
 }
 
 #pragma mark =================笔锋设计================
+
+-(UIBezierPath *)getEraseCircle:(CGPoint) point{
+    float r = (self.lineWidth)/2+3;
+    return [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x-r, point.y-r, 2*r, 2*r)];
+}
+
 //修正起笔
 -(void)corStartTip{
     
@@ -625,8 +633,9 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
         
         CGPoint pd =  [self getPoint:_p1 vector:_v r:_dr];
         
-        [self.erasePath addLineToPoint:pd];
+//        [self.erasePath addLineToPoint:pd];
         
+        [self.erasePath appendPath:[self getEraseCircle:pd]];
 //        NSLog(@"%@",NSStringFromCGPoint(pd));
     }
 }

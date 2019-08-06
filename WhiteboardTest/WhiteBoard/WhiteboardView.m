@@ -46,6 +46,27 @@
             [path drawBezierPathLine];
         }
     }
+    
+    
+//    CGPoint p1 = CGPointMake(100, 100);
+//    UIBezierPath *pr = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, 200, 200)];
+//    pr.lineWidth = 4;
+//    UIBezierPath *pr1 = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(100, 100, 200, 200)];
+//
+//
+//    UIBezierPath *pp = [[UIBezierPath alloc] init];
+////    [pp closePath];
+//    [pp appendPath:pr];
+//    [pp appendPath:pr1];
+//
+//    pp.lineWidth = 3;
+////    [pp removeAllPoints];
+//    [pp stroke];
+//
+    
+//    BOOL iscon = [pr containsPoint:p1];
+//    NSLog(@"%@",@(iscon));
+//    [pr stroke];
 }
 
 
@@ -208,14 +229,19 @@
             float dis =  [self getDisP1:p1 p2:p2];
             float angle =  [self comAngle: [self getvectorP1:p1 p2:p2]];
             int dengfeng = ceil(dis/1);
-            for (int j=0; j<dengfeng; j++) {
-                float r = j*dis/dengfeng;
-                CGPoint pd = [self getPoint:p1 vector:angle r:r];
-                [tmp addObject: [NSValue valueWithCGPoint:pd]];
+            if(dengfeng){
+                for (int j=0; j<dengfeng; j++) {
+                    float r = j*dis/dengfeng;
+                    CGPoint pd = [self getPoint:p1 vector:angle r:r];
+                    [tmp addObject: [NSValue valueWithCGPoint:pd]];
+                }
+            }
+            else{
+                [tmp addObject: [NSValue valueWithCGPoint:p1]];
             }
         }
     }
-    NSLog(@"___%@",tmp);
+//    NSLog(@"___%@",tmp);
     return [tmp copy];
 }
 
@@ -225,7 +251,7 @@
     [self randomTest];
     
     [self addNotepath:path];//加入笔画
-    NSLog(@"%@",path.pathPoints);
+//    NSLog(@"%@",path.pathPoints);
     [self.operUndo removeAllObjects];//回撤笔画清除
     [self setNeedsDisplay];
 }
@@ -237,6 +263,7 @@
     NotePath *erasePath;
     
     NSArray *newErasePoints = [self getCorErasePoints:points];
+    NSLog(@"__%@",newErasePoints);
     
     for (NotePath *notepath in self.notePaths) {
         for (NSValue *dpv in newErasePoints) {
