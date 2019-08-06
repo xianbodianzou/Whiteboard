@@ -72,6 +72,10 @@
     }
 }
 
+- (IBAction)clearAllAction:(id)sender {
+    
+    [self.board eraseAll];
+}
 
 
 -(NSValue *)intersectionWithPoint1:(NSValue *)point1 point2:(NSValue *)point2 point3:(NSValue *)point3 point4:(NSValue *)point4{

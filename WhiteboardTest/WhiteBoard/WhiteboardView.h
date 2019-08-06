@@ -24,5 +24,7 @@
 -(void)forword;
 //后退
 -(void)back;
+//擦除所有
+-(void)eraseAll;
 
 @end

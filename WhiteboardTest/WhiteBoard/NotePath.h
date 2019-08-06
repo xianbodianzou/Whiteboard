@@ -32,6 +32,7 @@
 @interface NotePathOper : NSObject
 @property (nonatomic,strong) NSString *operId;//操作id
 @property (nonatomic,strong) NSString *lineId;//线
+@property (nonatomic,strong) NSArray *lineIds;//线id集合 全部擦除操作
 @property (nonatomic,assign) WhiteboardOperate oper;//操作类型。
 
 @end

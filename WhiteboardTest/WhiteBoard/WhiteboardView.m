@@ -61,6 +61,9 @@
         else if(f.oper == WhiteboardOperate_erase){
             [self.eraseIds addObject:f.lineId];
         }
+        else if(f.oper == WhiteboardOperate_eraseAll){
+            [self.eraseIds addObjectsFromArray:f.lineIds];
+        }
         
         [self generateAvailablePaths];
         [self setNeedsDisplay];
@@ -77,6 +80,25 @@
         else if(f.oper == WhiteboardOperate_erase){
             [self.eraseIds removeObject:f.lineId];
         }
+        else if(f.oper == WhiteboardOperate_eraseAll){
+            [self.eraseIds removeObjectsInArray:f.lineIds];
+        }
+        [self generateAvailablePaths];
+        [self setNeedsDisplay];
+    }
+}
+
+-(void)eraseAll{
+    NSArray *arr =  [self getALLAvailablePathIds];
+    if(arr.count){
+        NotePathOper *oper = [[NotePathOper alloc] init];
+        oper.oper = WhiteboardOperate_eraseAll;
+        oper.lineIds = arr;
+        
+        [self.eraseIds addObjectsFromArray: arr];
+        [self.operHis addObject: oper];
+        [self.operUndo removeAllObjects];
+        
         [self generateAvailablePaths];
         [self setNeedsDisplay];
     }
@@ -132,6 +154,21 @@
     nodeOper.oper = oper;
     nodeOper.lineId = lineId;
     [self.operHis addObject:nodeOper];
+}
+
+//获取所有有效pathid
+-(NSArray *)getALLAvailablePathIds{
+    NSMutableArray *arr = [[NSMutableArray alloc] init];
+    for (NSString *lineid in self.addIds) {
+        //排除被擦除的
+        if(![self.eraseIds containsObject:lineid]){
+            NotePath *path = [self.dicPaths objectForKey:lineid];
+            if(path){
+                [arr addObject:path.lineId];
+            }
+        }
+    }
+    return [arr copy];
 }
 
 //生成需要 画笔画

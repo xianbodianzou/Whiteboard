@@ -39,6 +39,7 @@ typedef enum : NSUInteger {
 typedef enum : NSUInteger {
     WhiteboardOperate_add,//增加
     WhiteboardOperate_erase,//擦除
+    WhiteboardOperate_eraseAll,//所有
 } WhiteboardOperate;
 
 #endif /* WhiteboardEnum_h */
