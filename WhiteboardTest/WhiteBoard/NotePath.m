@@ -73,6 +73,7 @@
 //UIBezierPath b贝塞尔曲线画法。
 - (void)drawBezierPathLine{
     [[UIColor colorWithCGColor:self.lineColor.CGColor] set];
+    
     if(self.lineType ==NoteLineType_brush||self.lineType==NoteLineType_tip){
         for (UIBezierPath *p in self.tipAllPaths) {
             [p stroke];
@@ -611,6 +612,8 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
         CGPoint pd =  [self getPoint:_p1 vector:_v r:_dr];
         
         [self.erasePath addLineToPoint:pd];
+        
+//        NSLog(@"%@",NSStringFromCGPoint(pd));
     }
 }
 

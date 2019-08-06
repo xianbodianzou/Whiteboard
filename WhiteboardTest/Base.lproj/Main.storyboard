@@ -29,7 +29,7 @@
                                 <rect key="frame" x="82" y="44" width="121" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
-                                    <segment title="First"/>
+                                    <segment title="画线"/>
                                     <segment title="擦除"/>
                                 </segments>
                                 <connections>
