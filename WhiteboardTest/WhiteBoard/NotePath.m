@@ -628,6 +628,11 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
     if(r1c>8) r1c = 8;
     if(rc2>8) rc2 = 8;
     
+    //按当前宽度 缩放宽度
+    r1c = self.lineWidth*r1c/8;
+    rc2 = self.lineWidth*rc2/8;
+    
+    //笔锋 宽度不变
     if(self.lineType == NoteLineType_tip){
         r1c = rc2 = self.lineWidth;
     }
