@@ -74,6 +74,8 @@
 - (void)drawBezierPathLine{
     [[UIColor colorWithCGColor:self.lineColor.CGColor] set];
     
+//    [self.erasePath stroke];
+    
     if(self.lineType ==NoteLineType_brush||self.lineType==NoteLineType_tip){
         for (UIBezierPath *p in self.tipAllPaths) {
             [p stroke];
@@ -438,7 +440,7 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
 
 -(UIBezierPath *)calcPath:(NSArray *)pathPoints{
     //计算擦除点路径
-    if(self.isCompelete&&pathPoints &&pathPoints.count>1){
+    if(self.isCompelete&&pathPoints &&pathPoints.count){
         
         CGPoint pf = ((NSValue *)pathPoints[0]).CGPointValue;
         self.erasePath = [[UIBezierPath alloc] init];
@@ -461,6 +463,9 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
                 //所有点 加入擦除点路径。
                 [self getQuadCurvePoints:p1 ToPoint:p2 cp:cp];
             }
+        }
+        else if(pathPoints.count){
+            [self.erasePath addLineToPoint:((NSValue *)pathPoints.lastObject).CGPointValue];
         }
     }
     
@@ -491,6 +496,15 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
                     //毛笔写法
                     [self addQuadCurve:p1 ToPoint:p2 cp:cp];
                 }
+            }
+            else if(pathPoints.count){
+                UIBezierPath *pitem = [[UIBezierPath alloc] init];
+                pitem.lineCapStyle =  kCGLineCapRound;
+                pitem.lineJoinStyle = kCGLineJoinRound;
+                pitem.lineWidth = self.lineWidth;
+                [pitem moveToPoint:((NSValue *)pathPoints.firstObject).CGPointValue];
+                [pitem addLineToPoint:((NSValue *)pathPoints.lastObject).CGPointValue];
+                [self.tipAllPaths addObject:pitem];
             }
             //起笔修正
             if(self.lineType == NoteLineType_brush) [self corStartTip];
