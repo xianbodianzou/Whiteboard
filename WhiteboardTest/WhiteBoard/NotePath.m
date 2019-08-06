@@ -538,11 +538,11 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
 //修正起笔
 -(void)corStartTip{
     
-    int cp = 6;
+    int cp = round( 6*self.lineWidth/8);
     if(self.tipAllPaths.count>=cp ){
         for (int i=0; i<cp; i++) {
             UIBezierPath *p = (UIBezierPath *)self.tipAllPaths[i];
-            float cw = i*8.0/cp;
+            float cw = i*self.lineWidth/cp;
             if(p.lineWidth>cw){
                 p.lineWidth = cw;
             }
@@ -555,7 +555,7 @@ CGPoint midpoint(CGPoint p0, CGPoint p1) {
     if(!self.tipAllPaths.count){
         return;
     }
-    float lastW = 8;
+    float lastW = self.lineWidth;
     int lastCP = 50;
     
     //根据笔速修正笔锋距离

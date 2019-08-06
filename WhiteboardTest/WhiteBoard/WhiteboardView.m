@@ -189,7 +189,7 @@
 //宽度 颜色 随机测试代码
 -(void)randomTest{
     //测试代码
-    NSUInteger r1 = arc4random_uniform(10) + 1;
+    NSUInteger r1 = arc4random_uniform(10) + 4;
     NSUInteger r2 = arc4random_uniform(255);
     NSUInteger r3 = arc4random_uniform(255);
     NSUInteger r4 = arc4random_uniform(255);
@@ -225,6 +225,7 @@
     [self randomTest];
     
     [self addNotepath:path];//加入笔画
+    NSLog(@"%@",path.pathPoints);
     [self.operUndo removeAllObjects];//回撤笔画清除
     [self setNeedsDisplay];
 }
