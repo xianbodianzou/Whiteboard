@@ -30,6 +30,7 @@
     if(self = [super initWithFrame:frame]){
         
         [self customInit];
+        [self randomTest];
     }
     return self;
 }
@@ -46,6 +47,21 @@
             [path drawBezierPathLine];
         }
     }
+    
+//    UIBezierPath *p1= [[UIBezierPath alloc] init];
+//    [p1 moveToPoint:CGPointMake(100, 300)];
+//    [p1 addLineToPoint:CGPointMake(200, 300)];
+//    p1.lineWidth = 10;
+//    [[UIColor blackColor] set];
+//    [p1 stroke];
+//    
+//    UIBezierPath *p2 = [[UIBezierPath alloc] init];
+//    [p2 moveToPoint:CGPointMake(100, 300)];
+//    [p2 addLineToPoint:CGPointMake(200, 300)];
+//    p2.lineWidth = 5;
+//    [[UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.0] set];
+//    [p2 stroke];
+//    
     
     
 //    CGPoint p1 = CGPointMake(100, 100);
@@ -248,7 +264,7 @@
 
 #pragma mark =================WhiteboardCurrentViewDelegate================
 -(void)compeleteFullPathStrokes:(NotePath *)path{
-    [self randomTest];
+//    [self randomTest];
     
     [self addNotepath:path];//加入笔画
 //    NSLog(@"%@",path.pathPoints);

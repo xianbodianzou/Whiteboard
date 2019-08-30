@@ -16,6 +16,7 @@
 		CC6AE19622DDAFDB00E1FCBC /* WhiteboardCurrentView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6AE19522DDAFDB00E1FCBC /* WhiteboardCurrentView.m */; };
 		CC6AE19C22DDB04A00E1FCBC /* WhiteboardView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6AE19B22DDB04A00E1FCBC /* WhiteboardView.m */; };
 		CC6AE19F22DDB87600E1FCBC /* NotePath.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6AE19E22DDB87600E1FCBC /* NotePath.m */; };
+		CC6C9AFB230BDB4000A6F7FB /* ddd.gif in Resources */ = {isa = PBXBuildFile; fileRef = CC6C9AFA230BDB4000A6F7FB /* ddd.gif */; };
 		CCE26FB022F2B75A0003B5F6 /* UIBezierPath+GetAllPoints.m in Sources */ = {isa = PBXBuildFile; fileRef = CCE26FAF22F2B75A0003B5F6 /* UIBezierPath+GetAllPoints.m */; };
 		EF8E00A848E3860A303A4EE0 /* libPods-WhiteboardTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4862E54FE8C70B38814220E3 /* libPods-WhiteboardTest.a */; };
 /* End PBXBuildFile section */
@@ -40,6 +41,7 @@
 		CC6AE19B22DDB04A00E1FCBC /* WhiteboardView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhiteboardView.m; sourceTree = "<group>"; };
 		CC6AE19D22DDB87600E1FCBC /* NotePath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotePath.h; sourceTree = "<group>"; };
 		CC6AE19E22DDB87600E1FCBC /* NotePath.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotePath.m; sourceTree = "<group>"; };
+		CC6C9AFA230BDB4000A6F7FB /* ddd.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = ddd.gif; path = Assets.xcassets/ddd.dataset/ddd.gif; sourceTree = "<group>"; };
 		CCA199DE22E55BB100557CEC /* WhiteboardEnum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhiteboardEnum.h; sourceTree = "<group>"; };
 		CCE26FAE22F2B75A0003B5F6 /* UIBezierPath+GetAllPoints.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+GetAllPoints.h"; sourceTree = "<group>"; };
 		CCE26FAF22F2B75A0003B5F6 /* UIBezierPath+GetAllPoints.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+GetAllPoints.m"; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 		CC6AE17922DD78A200E1FCBC /* WhiteboardTest */ = {
 			isa = PBXGroup;
 			children = (
+				CC6C9AFA230BDB4000A6F7FB /* ddd.gif */,
 				CC6AE19022DD78F400E1FCBC /* WhiteBoard */,
 				CC6AE17A22DD78A200E1FCBC /* AppDelegate.h */,
 				CC6AE17B22DD78A200E1FCBC /* AppDelegate.m */,
@@ -188,6 +191,7 @@
 				CC6AE18722DD78A300E1FCBC /* LaunchScreen.storyboard in Resources */,
 				CC6AE18422DD78A300E1FCBC /* Assets.xcassets in Resources */,
 				CC6AE18222DD78A200E1FCBC /* Main.storyboard in Resources */,
+				CC6C9AFB230BDB4000A6F7FB /* ddd.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

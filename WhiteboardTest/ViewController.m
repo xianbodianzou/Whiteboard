@@ -11,6 +11,7 @@
 #import "WhiteboardCurrentView.h"
 #import "NotePath.h"
 #import "UIBezierPath+GetAllPoints.h"
+#import "FLAnimatedImage.h"
 
 
 @interface ViewController ()
@@ -26,8 +27,9 @@
     [self.view addSubview:wv];
     [self.view sendSubviewToBack:wv];
     
-    self.board = wv;
+//    self.board = wv;
     
+//    BOOL b=  [@[@"1"] containsObject:@""];
 //    UIBezierPath *pathtest = [[UIBezierPath alloc] init];
 //    [pathtest moveToPoint:CGPointMake(0, 0)];
 //    
@@ -36,6 +38,25 @@
 //    NSArray *points = [pathtest points];
 //    
 //    NSLog(@"%@",points);
+    
+    
+    UIImage *img = [UIImage animatedImageNamed:@"hangupWaint" duration:0.5];
+
+    UIButton *but = [UIButton buttonWithType:UIButtonTypeCustom];
+    [but setImage:img forState:UIControlStateNormal];
+    but.frame = CGRectMake(10, [UIScreen mainScreen].bounds.size.height-70,50,50);
+    [self.view addSubview:but];
+    
+    
+    
+//    NSURL *url = [[NSBundle mainBundle] URLForResource:@"ddd" withExtension:@"gif"];
+//    NSData *data = [NSData dataWithContentsOfURL:url];
+//    FLAnimatedImage *animatedImage = [FLAnimatedImage animatedImageWithGIFData:data];
+//    FLAnimatedImageView *imageView = [[FLAnimatedImageView alloc] init];
+//    imageView.animatedImage = animatedImage;
+//    imageView.frame = CGRectMake(0.0, 0.0, 100.0, 100.0);
+//    [self.view addSubview:imageView];
+
 }
 
 - (IBAction)presentClick:(id)sender {
