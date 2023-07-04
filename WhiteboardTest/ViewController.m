@@ -27,7 +27,7 @@
     [self.view addSubview:wv];
     [self.view sendSubviewToBack:wv];
     
-//    self.board = wv;
+    self.board = wv;
     
 //    BOOL b=  [@[@"1"] containsObject:@""];
 //    UIBezierPath *pathtest = [[UIBezierPath alloc] init];
@@ -40,12 +40,12 @@
 //    NSLog(@"%@",points);
     
     
-    UIImage *img = [UIImage animatedImageNamed:@"hangupWaint" duration:0.5];
-
-    UIButton *but = [UIButton buttonWithType:UIButtonTypeCustom];
-    [but setImage:img forState:UIControlStateNormal];
-    but.frame = CGRectMake(10, [UIScreen mainScreen].bounds.size.height-70,50,50);
-    [self.view addSubview:but];
+//    UIImage *img = [UIImage animatedImageNamed:@"hangupWaint" duration:0.5];
+//
+//    UIButton *but = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [but setImage:img forState:UIControlStateNormal];
+//    but.frame = CGRectMake(10, [UIScreen mainScreen].bounds.size.height-70,50,50);
+//    [self.view addSubview:but];
     
     
     
